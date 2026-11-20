@@ -27,8 +27,13 @@ function copyDir(name: string): void {
 }
 
 // Start from a clean output directory so a stale run can never leak in.
-rmSync(outputDir, { recursive: true, force: true });
+// Never remove the output directory itself: in the grader it is a bind
+// mount (/output), and deleting a mount point fails with EBUSY. Only its
+// contents are removed, which is all a clean run needs.
 mkdirSync(outputDir, { recursive: true });
+for (const entry of readdirSync(outputDir)) {
+  rmSync(join(outputDir, entry), { recursive: true, force: true });
+}
 
 copyDir('app');
 copyDir('screenshots');
