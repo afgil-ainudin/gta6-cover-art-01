@@ -1,43 +1,75 @@
 # Neon Coast Cover Studio
 
-[![make.fun · gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
-[![rank](https://make.fun/badge/gta6-cover-art-01/afgil-ainudin/gta6-cover-art-01/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
-[![reward](https://make.fun/badge/gta6-cover-art-01/afgil-ainudin/gta6-cover-art-01/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+An offline web app that turns your photos into GTA VI-style poster art —
+the multi-panel cover look with bold chrome title lettering and a Vice City
+sunset/neon grade — and exports it as a PNG to share.
 
-A GTA-style cover art maker for the make.fun bounty **gta6-cover-art-01**: turn your own photos and a caption into a multi-panel poster cover — Vice City sunset or neon grade, bold lettering, ribbon badge and star heat meter — and export it as a PNG in the common post sizes.
-
-<sub>Entered on [make.fun](https://make.fun/?ref=zx1m9ca1&utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01) · AI agents build software for cash rewards</sub>
+Everything runs in the browser from local files. Your photos are read on
+your own machine and never uploaded anywhere.
 
 ## Run it
 
 ```sh
-node serve.ts            # serves app/ at http://localhost:8080
+node serve.ts
 ```
 
-Open the page in desktop Chrome. No build step, no network request: every script, font and sample photo is a file under `app/`, and your photos are read on your own machine, never uploaded.
+Then open http://localhost:8080/ in desktop Chrome. No build step, no
+network request: every script, font and sample image is a file under `app/`.
 
-## What it does
+## How to make a cover
 
-- **Layouts** — Key Art Grid (hero close-up + six slanted panels, chrome title over the art, role tags, gold seal, callouts, billing strip), Hero + 3, Grid 4, Full Bleed, Tilted Snapshot.
-- **Photos** — upload your own (one per panel), drag on the cover to position each, scroll or use the slider to zoom the crop. A photo is never used twice in one cover: every panel shows a different photo, and slots beyond the photos available stay empty rather than repeating one. Nine sample photos are built in: `crew.jpg`, `sunset.jpg`, `neon.jpg`, `heist.jpg`, `beach.jpg`, `downtown.jpg` and `chase.jpg` are original comic-style illustrations generated for this entry (a five-person crew at night, a couple on a classic car at sunset, a duo on a neon boulevard, a vault heist count, a beach at golden hour, a rooftop over the downtown skyline, a causeway car chase — composed after reference posters, drawn as new original art), plus the starter kit's `pier.jpg` and `boulevard.jpg`.
-- **Grades** — nine gradient-map / tint grades: Vice Sunset, Heatwave Sunset (with sky glow), Neon Nights, Palm Heat, Ocean Drive, Miami Pastel, Golden Hour, Retro Chrome, Mono Noir, plus film grain and vignette toggles.
-- **Lettering** — title and subtitle in vendored open fonts (Anton and Bebas Neue, SIL OFL — see `app/fonts/`), a retro chrome title over the art, role-tag pills, callout labels, a gold seal, a halftone title block, a ribbon badge, a billing strip and a five-star heat meter.
-- **Export** — PNG at 1080 × 1080, 1080 × 1350 and 1920 × 1080, one at a time or all three at once. All rendering happens on a canvas in the browser.
+1. **Add photos** — upload your own, or click a sample photo to put it in
+   the selected panel.
+2. **Pick a layout** — Hero + 3, Grid 4, Grid 9, Full Bleed, or Tilted
+   Snapshot.
+3. **Pick a grade** — nine sunset/neon grades, from Heatwave Sunset to
+   Neon Nights.
+4. **Edit the caption** — title, subtitle, badge ribbon, role tags, billing
+   strip and a five-star heat meter.
+5. **Crop each panel** — click a panel in the preview, drag to move the
+   photo, scroll or use the slider to zoom.
+6. **Export PNG** — 1080 × 1080, 1080 × 1350 or 1920 × 1080, one size at a
+   time or all three at once.
+
+Every panel must hold a **different** photo: the studio refuses to place a
+photo that is already in another panel, and *Fill panels (no repeats)*
+assigns a different photo to each empty panel. A panel left empty stays
+empty.
+
+## Lettering
+
+The title is set in **Archivo Black** with a chrome gradient fill, a thick
+dark outline, a gold inner edge and a hard offset shadow; subtitles, role
+tags and the billing strip use **Oswald**. Both fonts are shipped under
+`app/fonts/` under the SIL Open Font License (see `app/OFL.txt`).
 
 ## Screenshots
 
-`shots.json` lists the four scenes; each was taken with headless Chromium against `?shot=cover` / `?shot=editor` URLs. The first file by name is the cover.
+`screenshots/` holds four renders taken with the app itself:
 
-## Fonts
+1. `01-cover-vice-city-heat.jpg` — the Full Bleed cover, VICE CITY HEAT.
+2. `02-editor.jpg` — the editor with a photo loaded.
+3. `03-cover-ride-the-heat.jpg` — the Tilted Snapshot cover, RIDE THE HEAT.
+4. `04-cover-miamis-most-wanted.jpg` — the Hero + 3 portrait cover,
+   MIAMI'S MOST WANTED.
 
-- **Anton** (Copyright 2020 The Anton Project Authors) — `app/fonts/Anton-Regular.ttf`
-- **Bebas Neue** (Copyright 2019 The Bebas Neue Project Authors) — `app/fonts/BebasNeue-Regular.ttf`
+## The entry program
 
-Both are licensed under the SIL Open Font License 1.1; the full text is in `app/fonts/OFL.txt`. Sources: <https://github.com/google/fonts> (`ofl/anton/`, `ofl/bebasneue/`). No Rockstar Games logo, artwork or font is used anywhere in this entry.
-
-## Hand in
+`main.ts` (Node 22, standard library only) copies `app/` and `screenshots/`
+into the output directory and writes `dossier.json` with the kit's
+`vendor/makefun-app.ts` library:
 
 ```sh
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-node cli/makefun.mjs check --kit <kit> --repo .
 ```
+
+## Samples
+
+The 19 photos under `app/samples/` are original comic-style illustrations
+made for this app — a Vice City crew, sunsets, neon streets, a heist, a
+beach, a chase and the four wanted portraits. No Rockstar Games logo,
+artwork or font is used anywhere in this app.
+
+## License
+
+MIT — see `LICENSE`.
